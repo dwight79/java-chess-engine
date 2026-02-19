@@ -7,33 +7,32 @@ public class Rook extends Piece {
         super(isWhite, row, col);
     }
 
-    public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
+    @Override
+    public boolean isValidMove(int er, int ec, Piece[][] board) {
+        if (row != er && col != ec) return false;
 
-        // Rook must move in straight line
-        if (newRow != row && newCol != col) {
-            return false;
-        }
+        int rowStep = Integer.compare(er, row);
+        int colStep = Integer.compare(ec, col);
 
-        // Check path is clear
-        if (newRow == row) {
-            int step = (newCol > col) ? 1 : -1;
-            for (int c = col + step; c != newCol; c += step) {
-                if (board[row][c] != null) return false;
+        int r = row + rowStep;
+        int c = col + colStep;
+
+        while (r != er || c != ec) {
+            // ✅ bounds check FIRST
+            if (r < 0 || r >= 8 || c < 0 || c >= 8) {
+                return false;
             }
-        } else {
-            int step = (newRow > row) ? 1 : -1;
-            for (int r = row + step; r != newRow; r += step) {
-                if (board[r][col] != null) return false;
+
+            if (board[r][c] != null) {
+                return false;
             }
+
+            r += rowStep;
+            c += colStep;
         }
 
-        // Can't capture own piece
-        if (board[newRow][newCol] != null &&
-            board[newRow][newCol].isWhite == this.isWhite) {
-            return false;
-        }
-
-        return true;
+        // Destination square
+        return board[er][ec] == null || board[er][ec].isWhite != isWhite;
     }
 
     public List<int[]> generateMoves(Piece[][] board) {

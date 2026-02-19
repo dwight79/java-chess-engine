@@ -7,6 +7,7 @@ public class Knight extends Piece {
         super(isWhite, row, col);
     }
 
+    @Override
     public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
         int rowDiff = Math.abs(newRow - row);
         int colDiff = Math.abs(newCol - col);

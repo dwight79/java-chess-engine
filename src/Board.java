@@ -40,21 +40,37 @@ public class Board {
         board[0][4] = new King(false, 0, 4);
     }
 
-    public void makeMove(int sr, int sc, int er, int ec) {
+    public boolean makeMove(int sr, int sc, int er, int ec) {
         Piece piece = board[sr][sc];
 
         if (piece == null) {
             System.out.println("No piece at start position.");
-            return;
+            return false;
         }
 
-        if (piece.isValidMove(er, ec, board)) {
-            board[er][ec] = piece;
-            board[sr][sc] = null;
-            piece.setPosition(er, ec);
-        } else {
+        if (!piece.isValidMove(er, ec, board)) {
             System.out.println("Invalid move!");
+            return false;
         }
+
+        // Save state (important later for undo during check validation)
+        Piece captured = board[er][ec];
+
+        // Make move
+        board[er][ec] = piece;
+        board[sr][sc] = null;
+        piece.setPosition(er, ec);
+
+        // If move leaves your king in check → undo
+        if (isKingInCheck(piece.isWhite)) {
+            board[sr][sc] = piece;
+            board[er][ec] = captured;
+            piece.setPosition(sr, sc);
+            System.out.println("You cannot leave your king in check!");
+            return false;
+        }
+
+        return true;
     }
 
     public void printBoard() {
@@ -68,4 +84,77 @@ public class Board {
         }
         System.out.println();
     }
+
+    public boolean isKingInCheck(boolean whiteKing) {
+        int kingRow = -1, kingCol = -1;
+
+        // Find the king
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = board[r][c];
+                if (p instanceof King && p.isWhite == whiteKing) {
+                    kingRow = r;
+                    kingCol = c;
+                }
+            }
+        }
+
+        // Check if any opponent piece attacks the king
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = board[r][c];
+                if (p != null && p.isWhite != whiteKing) {
+                    if (p.isValidMove(kingRow, kingCol, board)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean resolvesCheck(int sr, int sc, int er, int ec, boolean whiteKing) {
+        Piece moving = board[sr][sc];
+        Piece captured = board[er][ec];
+
+        // Make temporary move
+        board[er][ec] = moving;
+        board[sr][sc] = null;
+        int oldRow = moving.row;
+        int oldCol = moving.col;
+        moving.setPosition(er, ec);
+
+        boolean stillInCheck = isKingInCheck(whiteKing);
+
+        // Undo move
+        board[sr][sc] = moving;
+        board[er][ec] = captured;
+        moving.setPosition(oldRow, oldCol);
+
+        return !stillInCheck;
+    }
+
+    public boolean isCheckmate(boolean whiteKing) {
+        if (!isKingInCheck(whiteKing)) return false;
+
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = board[r][c];
+                if (p != null && p.isWhite == whiteKing) {
+                    for (int er = 0; er < 8; er++) {
+                        for (int ec = 0; ec < 8; ec++) {
+                            if (p.isValidMove(er, ec, board)) {
+                                if (resolvesCheck(r, c, er, ec, whiteKing)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    
 }

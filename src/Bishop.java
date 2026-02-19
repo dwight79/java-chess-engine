@@ -9,24 +9,35 @@ public class Bishop extends Piece {
 
     @Override
     public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
+
+        // Must move diagonally
         if (Math.abs(newRow - row) != Math.abs(newCol - col)) {
             return false;
         }
 
-        int rowStep = (newRow > row) ? 1 : -1;
-        int colStep = (newCol > col) ? 1 : -1;
+        int rowStep = Integer.compare(newRow, row);
+        int colStep = Integer.compare(newCol, col);
 
         int r = row + rowStep;
         int c = col + colStep;
 
-        while (r != newRow && c != newCol) {
-            if (board[r][c] != null) return false;
+        while (r != newRow || c != newCol) {
+
+            // ✅ bounds check FIRST
+            if (r < 0 || r >= 8 || c < 0 || c >= 8) {
+                return false;
+            }
+
+            if (board[r][c] != null) {
+                return false;
+            }
+
             r += rowStep;
             c += colStep;
         }
 
-        return board[newRow][newCol] == null ||
-               board[newRow][newCol].isWhite != this.isWhite;
+        // Destination square
+        return (board[newRow][newCol] == null) || (board[newRow][newCol].isWhite != this.isWhite);
     }
 
     public List<int[]> generateMoves(Piece[][] board) {
