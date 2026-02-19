@@ -1,5 +1,3 @@
-package pieces;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,6 @@ public class Rook extends Piece {
         super(isWhite, row, col);
     }
 
-    @Override
     public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
 
         // Rook must move in straight line
@@ -32,14 +29,13 @@ public class Rook extends Piece {
 
         // Can't capture own piece
         if (board[newRow][newCol] != null &&
-            board[newRow][newCol].isWhite() == this.isWhite) {
+            board[newRow][newCol].isWhite == this.isWhite) {
             return false;
         }
 
         return true;
     }
 
-    @Override
     public List<int[]> generateMoves(Piece[][] board) {
         List<int[]> moves = new ArrayList<>();
 
@@ -58,7 +54,7 @@ public class Rook extends Piece {
                 if (board[r][c] == null) {
                     moves.add(new int[]{r, c});
                 } else {
-                    if (board[r][c].isWhite() != this.isWhite) {
+                    if (board[r][c].isWhite != this.isWhite) {
                         moves.add(new int[]{r, c}); // capture
                     }
                     break; // blocked

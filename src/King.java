@@ -1,5 +1,3 @@
-package pieces;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,20 +7,18 @@ public class King extends Piece {
         super(isWhite, row, col);
     }
 
-    @Override
     public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
         int rowDiff = Math.abs(newRow - row);
         int colDiff = Math.abs(newCol - col);
 
         if (rowDiff <= 1 && colDiff <= 1) {
             return board[newRow][newCol] == null ||
-                   board[newRow][newCol].isWhite() != this.isWhite;
+                   board[newRow][newCol].isWhite != this.isWhite;
         }
 
         return false;
     }
 
-    @Override
     public List<int[]> generateMoves(Piece[][] board) {
         List<int[]> moves = new ArrayList<>();
 
@@ -34,7 +30,7 @@ public class King extends Piece {
                     if (r == row && c == col) continue;
 
                     if (board[r][c] == null ||
-                        board[r][c].isWhite() != this.isWhite) {
+                        board[r][c].isWhite != this.isWhite) {
                         moves.add(new int[]{r, c});
                     }
                 }

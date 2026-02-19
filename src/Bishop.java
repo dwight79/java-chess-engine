@@ -1,5 +1,3 @@
-package pieces;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +26,9 @@ public class Bishop extends Piece {
         }
 
         return board[newRow][newCol] == null ||
-               board[newRow][newCol].isWhite() != this.isWhite;
+               board[newRow][newCol].isWhite != this.isWhite;
     }
 
-    @Override
     public List<int[]> generateMoves(Piece[][] board) {
         List<int[]> moves = new ArrayList<>();
 
@@ -47,7 +44,7 @@ public class Bishop extends Piece {
                 if (board[r][c] == null) {
                     moves.add(new int[]{r, c});
                 } else {
-                    if (board[r][c].isWhite() != this.isWhite) {
+                    if (board[r][c].isWhite != this.isWhite) {
                         moves.add(new int[]{r, c});
                     }
                     break;

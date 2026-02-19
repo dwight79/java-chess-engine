@@ -1,5 +1,3 @@
-package pieces;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +14,7 @@ public class Queen extends Piece {
         int colDiff = Math.abs(newCol - col);
 
         if (row == newRow || col == newCol) {
-            return new Rook(isWhite, row, col)
-                    .isValidMove(newRow, newCol, board);
+            return new Rook(isWhite, row, col).isValidMove(newRow, newCol, board);
         }
 
         if (rowDiff == colDiff) {
@@ -28,7 +25,6 @@ public class Queen extends Piece {
         return false;
     }
 
-    @Override
     public List<int[]> generateMoves(Piece[][] board) {
         List<int[]> moves = new ArrayList<>();
 
