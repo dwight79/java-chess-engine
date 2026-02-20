@@ -7,6 +7,7 @@ public class King extends Piece {
         super(isWhite, row, col);
     }
 
+    @Override
     public boolean isValidMove(int newRow, int newCol, Piece[][] board) {
         int rowDiff = Math.abs(newRow - row);
         int colDiff = Math.abs(newCol - col);
@@ -14,6 +15,10 @@ public class King extends Piece {
         if (rowDiff <= 1 && colDiff <= 1) {
             return board[newRow][newCol] == null ||
                    board[newRow][newCol].isWhite != this.isWhite;
+        }
+
+        if (!hasMoved && newRow == row && Math.abs(newCol - col) == 2) {
+            return true; // Board will fully validate
         }
 
         return false;
