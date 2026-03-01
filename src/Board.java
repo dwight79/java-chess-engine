@@ -1,6 +1,7 @@
 public class Board {
 
     private final Piece[][] board = new Piece[8][8];
+    public static Pawn enPassantPawn;
 
     public Board() {
         setupBoard();
@@ -41,6 +42,10 @@ public class Board {
     }
 
     public boolean makeMove(int sr, int sc, int er, int ec) {
+        Pawn enPassantCapturedPawn = null;
+        int enPassantCapturedRow = -1;
+        int enPassantCapturedCol = -1;
+
         Piece piece = board[sr][sc];
 
         if (piece == null) {
@@ -58,7 +63,18 @@ public class Board {
             return false;
         }
 
-        // Save state (important later for undo during check validation)
+        // En passant capture
+        if (piece instanceof Pawn && board[er][ec] == null && sc != ec) {
+            Piece sidePiece = board[sr][ec];
+            if (sidePiece instanceof Pawn) {
+                enPassantCapturedPawn = (Pawn) sidePiece;
+                enPassantCapturedRow = sr;
+                enPassantCapturedCol = ec;
+                board[sr][ec] = null;
+            }
+        }
+
+        // Save state
         Piece captured = board[er][ec];
 
         // Make move
@@ -66,13 +82,24 @@ public class Board {
         board[sr][sc] = null;
         piece.setPosition(er, ec);
 
-        // If move leaves your king in check → undo
         if (isKingInCheck(piece.isWhite)) {
             board[sr][sc] = piece;
             board[er][ec] = captured;
             piece.setPosition(sr, sc);
+
+            // Restore en passant captured pawn
+            if (enPassantCapturedPawn != null) {
+                board[enPassantCapturedRow][enPassantCapturedCol] = enPassantCapturedPawn;
+            }
+
             System.out.println("You cannot leave your king in check!");
             return false;
+        }
+
+        // EN PASSANT bookkeeping
+        enPassantPawn = null;
+        if (piece instanceof Pawn && Math.abs(er - sr) == 2) {
+            enPassantPawn = (Pawn) piece;
         }
 
         return true;
