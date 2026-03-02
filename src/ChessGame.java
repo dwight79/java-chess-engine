@@ -28,7 +28,18 @@ public class ChessGame {
                 continue;
             }
 
-            // Attempt move
+            Piece selected = board.getPiece(move[0], move[1]);
+
+            if (selected == null) {
+                System.out.println("No piece at that square.");
+                continue;
+            }
+
+            if (selected.isWhite != whiteTurn) {
+                System.out.println("That's not your piece!");
+                continue;
+            }
+
             if (!board.makeMove(move[0], move[1], move[2], move[3])) {
                 continue;
             }

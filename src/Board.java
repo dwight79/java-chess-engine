@@ -129,6 +129,10 @@ public class Board {
         System.out.println();
     }
 
+    public Piece getPiece(int r, int c) {
+        return board[r][c];
+    }
+
     public boolean isKingInCheck(boolean whiteKing) {
         int kingRow = -1, kingCol = -1;
 
