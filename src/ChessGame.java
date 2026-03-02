@@ -30,7 +30,14 @@ public class ChessGame {
 
             // Attempt move
             if (!board.makeMove(move[0], move[1], move[2], move[3])) {
-                continue; // failed move → same player's turn
+                continue;
+            }
+
+            // Pawn promotion (before switching turns)
+            if (board.hasPromotionPending()) {
+                System.out.print("Promote pawn to (Q/R/B/N): ");
+                char choice = scanner.nextLine().trim().toLowerCase().charAt(0);
+                board.promotePawn(choice);
             }
 
             // Switch turns AFTER successful move

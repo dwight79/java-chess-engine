@@ -2,6 +2,9 @@ public class Board {
 
     private final Piece[][] board = new Piece[8][8];
     public static Pawn enPassantPawn;
+    private Pawn promotionPawn = null;
+    private int promotionRow;
+    private int promotionCol;
 
     public Board() {
         setupBoard();
@@ -100,6 +103,15 @@ public class Board {
         enPassantPawn = null;
         if (piece instanceof Pawn && Math.abs(er - sr) == 2) {
             enPassantPawn = (Pawn) piece;
+        }
+
+        // Pawn promotion detection
+        if (piece instanceof Pawn) {
+            if ((piece.isWhite && er == 0) || (!piece.isWhite && er == 7)) {
+                promotionPawn = (Pawn) piece;
+                promotionRow = er;
+                promotionCol = ec;
+            }
         }
 
         return true;
@@ -284,5 +296,27 @@ public class Board {
         return true;
     }
 
-    
+    public boolean hasPromotionPending() {
+        return promotionPawn != null;
+    }
+
+    public void promotePawn(char choice) {
+        if (promotionPawn == null) return;
+
+        boolean white = promotionPawn.isWhite;
+        Piece newPiece;
+
+        switch (Character.toLowerCase(choice)) {
+            case 'q': newPiece = new Queen(white, promotionRow, promotionCol); break;
+            case 'r': newPiece = new Rook(white, promotionRow, promotionCol); break;
+            case 'b': newPiece = new Bishop(white, promotionRow, promotionCol); break;
+            case 'n': newPiece = new Knight(white, promotionRow, promotionCol); break;
+            default:
+                System.out.println("Invalid choice. Defaulting to Queen.");
+                newPiece = new Queen(white, promotionRow, promotionCol);
+        }
+
+        board[promotionRow][promotionCol] = newPiece;
+        promotionPawn = null;
+    }
 }
