@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+// To run the program:
+// javac -cp lib/sqlite-jdbc.jar -d out src/*.java && java -cp out:lib/sqlite-jdbc.jar ChessGame
+
 public class ChessGame {
 
     public static void main(String[] args) {
@@ -67,6 +70,12 @@ public class ChessGame {
                 } else {
                     System.out.println("White won by checkmate (1-0)");
                 }
+                break;
+            }
+
+            if (board.isStalemate(whiteTurn)) {
+                board.printBoard();
+                System.out.println("Stalemate! The game is a draw! (½-½)");
                 break;
             }
         }

@@ -333,6 +333,34 @@ public class Board {
         return true;
     }
 
+    public boolean isStalemate(boolean whiteTurn) {
+        // If king is in check, it cannot be stalemate
+        if (isKingInCheck(whiteTurn)) return false;
+
+        // Loop over all pieces of this color
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = board[r][c];
+                if (p != null && p.isWhite == whiteTurn) {
+                    // Check every possible destination
+                    for (int er = 0; er < 8; er++) {
+                        for (int ec = 0; ec < 8; ec++) {
+                            if (p.isValidMove(er, ec, board)) {
+                                if (resolvesCheck(r, c, er, ec, whiteTurn)) {
+                                    // Found at least one legal move → not stalemate
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // No legal moves and king is not in check → stalemate
+        return true;
+    }
+
     public boolean hasPromotionPending() {
         return promotionPawn != null;
     }
