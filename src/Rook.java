@@ -69,6 +69,6 @@ public class Rook extends Piece {
 
     @Override
     public String getSymbol() {
-        return isWhite ? "\u2656" : "\u2656";
+        return isWhite ? "\u2656" : "\u265C";
     }
 }

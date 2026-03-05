@@ -14,8 +14,8 @@ public class Board {
     public static final String BLACK_PIECE = "\u001B[30m";  // black
 
     // Background square colors
-    public static final String WHITE_SQUARE = "\u001B[47m"; // white background
-    public static final String BLACK_SQUARE = "\u001B[42m"; // green background (like chessboard)
+    public static final String WHITE_SQUARE = "\u001B[48;5;228m"; // white background
+    public static final String BLACK_SQUARE = "\u001B[45m"; // dark background (like chessboard)
 
     public Board() {
         setupBoard();
