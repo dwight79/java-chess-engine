@@ -6,6 +6,17 @@ public class Board {
     private int promotionRow;
     private int promotionCol;
 
+    // In Piece.java (or Board.java constants)
+    public static final String RESET = "\u001B[0m";
+
+    // Foreground piece colors
+    public static final String WHITE_PIECE = "\u001B[97m";  // bright white
+    public static final String BLACK_PIECE = "\u001B[30m";  // black
+
+    // Background square colors
+    public static final String WHITE_SQUARE = "\u001B[47m"; // white background
+    public static final String BLACK_SQUARE = "\u001B[42m"; // green background (like chessboard)
+
     public Board() {
         setupBoard();
     }
@@ -119,14 +130,36 @@ public class Board {
 
     public void printBoard() {
         System.out.println();
+
         for (int r = 0; r < 8; r++) {
+            // Print row numbers if desired
+            System.out.print((8 - r) + " ");
+
             for (int c = 0; c < 8; c++) {
-                if (board[r][c] == null) System.out.print(". ");
-                else System.out.print(board[r][c].getSymbol() + " ");
+                Piece p = board[r][c];
+
+                // Choose square color
+                String bg = ((r + c) % 2 == 0) ? WHITE_SQUARE : BLACK_SQUARE;
+
+                String symbol = " "; // default empty square
+                String fg = "";      // default foreground
+
+                if (p != null) {
+                    symbol = p.getSymbol();
+                    fg = p.isWhite ? WHITE_PIECE : BLACK_PIECE;
+                }
+
+                System.out.print(bg + fg + " " + symbol + " " + RESET);
             }
             System.out.println();
-        }
-        System.out.println();
+    }
+
+    // Print column letters
+    System.out.print("  ");
+    for (char c = 'a'; c <= 'h'; c++) {
+        System.out.print(" " + c + " ");
+    }
+    System.out.println("\n");
     }
 
     public Piece getPiece(int r, int c) {

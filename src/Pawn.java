@@ -42,6 +42,6 @@ public class Pawn extends Piece {
 
     @Override
     public String getSymbol() {
-        return isWhite ? "P" : "p";
+        return isWhite ? "\u2659" : "\u265F";
     }
 }

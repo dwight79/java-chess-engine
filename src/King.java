@@ -47,6 +47,6 @@ public class King extends Piece {
 
     @Override
     public String getSymbol() {
-        return isWhite ? "K" : "k";
+        return isWhite ? "♔" : "♚";
     }
 }

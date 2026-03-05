@@ -70,6 +70,6 @@ public class Bishop extends Piece {
 
     @Override
     public String getSymbol() {
-        return isWhite ? "B" : "b";
+        return isWhite ? "\u2657" : "\u265D";
     }
 }
