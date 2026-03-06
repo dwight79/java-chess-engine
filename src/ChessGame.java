@@ -62,6 +62,8 @@ public class ChessGame {
                 System.out.println("Check!");
             }
 
+            board.recordPosition();
+
             // Checkmate
             if (board.isCheckmate(whiteTurn)) {
                 board.printBoard();
@@ -76,6 +78,13 @@ public class ChessGame {
             if (board.isStalemate(whiteTurn)) {
                 board.printBoard();
                 System.out.println("Stalemate! The game is a draw! (½-½)");
+                break;
+            }
+
+            // Threefold repetition
+            if (board.isThreefoldRepetition()) {
+                board.printBoard();
+                System.out.println("Threefold repetition detected! The game is a draw! (½-½)");
                 break;
             }
         }

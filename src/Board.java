@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Board {
 
     private final Piece[][] board = new Piece[8][8];
@@ -16,6 +18,9 @@ public class Board {
     // Background square colors
     public static final String WHITE_SQUARE = "\u001B[48;5;228m"; // white background
     public static final String BLACK_SQUARE = "\u001B[45m"; // dark background (like chessboard)
+
+    // Add a history map to count positions
+    private Map<String, Integer> positionHistory = new HashMap<>();
 
     public Board() {
         setupBoard();
@@ -359,6 +364,35 @@ public class Board {
 
         // No legal moves and king is not in check → stalemate
         return true;
+    }
+
+    // Call this after each move
+    public void recordPosition() {
+        String key = generateBoardKey();
+        positionHistory.put(key, positionHistory.getOrDefault(key, 0) + 1);
+    }
+
+    public boolean isThreefoldRepetition() {
+        String key = generateBoardKey();
+        return positionHistory.getOrDefault(key, 0) >= 3;
+    }
+
+    // Simple key generation
+    private String generateBoardKey() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = board[r][c];
+                if (p == null) sb.append(".");
+                else sb.append(p.getSymbol()).append(p.isWhite ? "w" : "b");
+            }
+        }
+
+        // Include whose turn and castling rights if needed
+        // For simplicity, just include en passant pawn column
+        sb.append(enPassantPawn != null ? enPassantPawn.col : "-");
+
+        return sb.toString();
     }
 
     public boolean hasPromotionPending() {
