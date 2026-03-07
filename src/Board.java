@@ -21,6 +21,7 @@ public class Board {
 
     // Add a history map to count positions
     private Map<String, Integer> positionHistory = new HashMap<>();
+    private int halfMoveClock = 0; // for 50-move rule
 
     public Board() {
         setupBoard();
@@ -113,6 +114,13 @@ public class Board {
 
             System.out.println("You cannot leave your king in check!");
             return false;
+        }
+
+        // 50-move rule bookkeeping
+        if (piece instanceof Pawn || captured != null || enPassantCapturedPawn != null) {
+            halfMoveClock = 0;
+        } else {
+            halfMoveClock++;
         }
 
         // EN PASSANT bookkeeping
@@ -393,6 +401,61 @@ public class Board {
         sb.append(enPassantPawn != null ? enPassantPawn.col : "-");
 
         return sb.toString();
+    }
+
+    // Insufficient material detection, checks if checkmate is impossible
+    public boolean isInsufficientMaterial() {
+
+        int whiteBishops = 0;
+        int blackBishops = 0;
+        int whiteKnights = 0;
+        int blackKnights = 0;
+        int otherPieces = 0;
+
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+
+                Piece p = board[r][c];
+                if (p == null) continue;
+
+                // Ignore kings
+                if (p instanceof King) continue;
+
+                if (p instanceof Bishop) {
+                    if (p.isWhite) whiteBishops++;
+                    else blackBishops++;
+                }
+                else if (p instanceof Knight) {
+                    if (p.isWhite) whiteKnights++;
+                    else blackKnights++;
+                }
+                else {
+                    // Any pawn, rook, or queen means mate is possible
+                    otherPieces++;
+                }
+            }
+        }
+
+        // If pawns, rooks, or queens exist → mate possible
+        if (otherPieces > 0) return false;
+
+        int totalBishops = whiteBishops + blackBishops;
+        int totalKnights = whiteKnights + blackKnights;
+
+        // King vs King
+        if (totalBishops == 0 && totalKnights == 0) return true;
+
+        // King + Bishop vs King
+        if (totalBishops == 1 && totalKnights == 0) return true;
+
+        // King + Knight vs King
+        if (totalBishops == 0 && totalKnights == 1) return true;
+
+        return false;
+    }
+
+    public boolean isFiftyMoveRule() {
+        return halfMoveClock >= 100;
     }
 
     public boolean hasPromotionPending() {

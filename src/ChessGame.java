@@ -75,9 +75,24 @@ public class ChessGame {
                 break;
             }
 
+            // Stalemate
             if (board.isStalemate(whiteTurn)) {
                 board.printBoard();
                 System.out.println("Stalemate! The game is a draw! (½-½)");
+                break;
+            }
+
+            // Insufficient material
+            if (board.isInsufficientMaterial()) {
+                board.printBoard();
+                System.out.println("Insufficient material for checkmate, the game is a draw! (½-½)");
+                break;
+            }
+
+            // 50 move rule
+            if (board.isFiftyMoveRule()) {
+                board.printBoard();
+                System.out.println("50-move rule surpassed! The game is a draw! (½-½)");
                 break;
             }
 
