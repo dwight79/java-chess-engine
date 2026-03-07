@@ -40,7 +40,7 @@ java -cp out:lib/sqlite-jdbc.jar ChessGame
 
 - Enter moves in coordinate notation: `e2e4`
 - Type `exit` to quit
-- Supports: en passant, castling, pawn promotion, check detection, checkmate detection
+- Supports: en passant, castling, pawn promotion, check detection, checkmate detection, draw methods: stalemate, 50 move rule, threefold repetition, and insufficient checkmating material
 
 ## Database
 
