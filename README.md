@@ -17,9 +17,3 @@ A console-based chess engine built in Java using object-oriented principles.
 - OOP
 - Maven (optional)
 
-## Future Improvements
-- Minimax AI
-- Alpha-beta pruning
-- GUI with JavaFX
-- Online multiplayer
-
